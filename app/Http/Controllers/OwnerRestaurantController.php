@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Address;
 use App\Models\OwnerRestaurant;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class OwnerRestaurantController extends Controller
@@ -44,6 +46,9 @@ class OwnerRestaurantController extends Controller
             $owner_restaurant->address_id=$address->id;
             $owner_restaurant->save();
 
+            $restaurant_manger=Role::where('name','restaurent_manger')->first();
+            $user->roles()->attach($restaurant_manger);
+
             if($owner_restaurant){
                 return response()->json([
                     'massage'=>'data created successfully',
@@ -64,6 +69,8 @@ public function index()
                     
                     'date'=>$owner_restaurants
                 ], 200);
+
+    
 }
 
 
@@ -84,7 +91,8 @@ public function delete($id)  {
 
 public function search(Request $request)
 {
-   $owner_restaurant=OwnerRestaurant::where("restaurant_name","like","%".$request->restaurant_name."%")->first();
+   $owner_restaurant=OwnerRestaurant::with(['address','user'])->
+   where("restaurant_name","like","%".$request->restaurant_name."%")->first();
 
    return response()->json([
     'data'=>$owner_restaurant

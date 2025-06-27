@@ -9,6 +9,13 @@ class Meal extends Model
 {
     use HasFactory;
 
+    protected $fillable=[
+
+        'price_after_discount',
+        'end_date'
+
+    ];
+
     public function category()
     {
         return $this->belongsTo(Category::class);
@@ -17,5 +24,10 @@ class Meal extends Model
      public function owner_restaurant()
     {
         return $this->belongsTo(OwnerRestaurant::class);
+    }
+
+       public function orders()
+    {
+        return $this->belongsToMany(Order::class, 'order_meal', 'meal_id', 'order_id')->withPivot('quantity','size');
     }
 }

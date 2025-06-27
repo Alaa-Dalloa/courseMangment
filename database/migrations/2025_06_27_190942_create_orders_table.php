@@ -13,16 +13,17 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('meals', function (Blueprint $table) {
+        Schema::create('orders', function (Blueprint $table) {
+
             $table->id();
-            $table->string('name');
-            $table->string('photo');
-            $table->string('price');
-            $table->string('description');
-            $table->string('price_after_discount')->nullable();
-            $table->string('end_date')->nullable();
-            $table->unsignedBigInteger('category_id');
-            $table->foreign('category_id')->references('id')->on('categories');
+            $table->enum('status', ['Recipient', 'Being_processed','Ready', 'Under_delivery','Delivered']);
+            $table->string('order_price');
+            $table->string('delivery_cost');
+            $table->string('order_date');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->unsignedBigInteger('address_id');
+            $table->foreign('address_id')->references('id')->on('addresses');
             $table->unsignedBigInteger('owner_restaurant_id');
             $table->foreign('owner_restaurant_id')->references('id')->on('owner_restaurants');
             $table->timestamps();
@@ -36,6 +37,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('meals');
+        Schema::dropIfExists('orders');
     }
 };

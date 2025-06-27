@@ -13,4 +13,14 @@ class Address extends Model
     {
         return $this->hasOne(OwnerRestaurant::class);
     }
+
+     public function orders()
+   {
+       return $this->hasMany(Order::class);
+   }
+
+      public function users()
+ {
+    return $this->belongsToMany(User::class, 'address_user', 'address_id', 'user_id');
+ }
 }
