@@ -30,6 +30,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::get('/logout', [AuthController::class, 'logout'])->middleware("jwtAuth");
 Route::get('/user-profile', [AuthController::class, 'getUser'])->middleware("jwtAuth");
 
+Route::post('/saveFcmToken', [AuthController::class, 'saveFcmToken']);
+
 Route::post('/createRestaurant', [OwnerRestaurantController::class, 'create'])->middleware("SuperAdminMiddleware");
 Route::get('/allRestaurant', [OwnerRestaurantController::class, 'index']);
 Route::post('/delete/{id}', [OwnerRestaurantController::class, 'delete']);

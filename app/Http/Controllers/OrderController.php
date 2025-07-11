@@ -11,6 +11,10 @@ use Carbon\Carbon;
 use Hamcrest\Number\OrderingComparison;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\SendNotificationsService;
+
+use App\Services\SendNotificationService; 
+
 
 class OrderController extends Controller
 {
@@ -115,7 +119,20 @@ class OrderController extends Controller
         'order_price' => $order_price
     ]);
 
-    return response()->json(['data' => $order], 201);
+   $user_id=OwnerRestaurant::where('id',$owner_restaurant_id)->value('user_id');
+   $fcm_token=User::where('id',$user_id)->value('fcm_token');
+   $message=[
+    'title'=>'there are new notification order ',
+    'body'=>$order->id
+   ];
+
+   (new SendNotificationService)->sendByFcm($fcm_token,$message);
+
+
+    return response()->json(['data' => $order , 'fcm_token'=>$fcm_token , 'message'=>$message], 201);
 }
+
+
+   
 
 }

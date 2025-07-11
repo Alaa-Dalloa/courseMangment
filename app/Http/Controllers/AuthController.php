@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Support\Facades\Response as FacadesResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -106,6 +107,21 @@ class AuthController extends Controller
         }
     }
 
+
+ public function saveFcmToken(Request $request)
+    {
+      $id=Auth::user()->id;
+      $user=User::where('id',$id)->first();
+
+      $user->fcm_token=$request->fcm_token;
+      $user->save();
+
+      return response()->json([
+        'message'=>'fcm token saved successfully'
+      ],201);
+
+
+    }
 
    
 }
